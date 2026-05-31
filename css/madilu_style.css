@@ -1,0 +1,279 @@
+/* ==========================================
+   1. BASE STYLES & RESET
+   ========================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: #fff9f3; /* Warm, welcoming background tone */
+  color: #333;
+  overflow-x: hidden; /* Prevents unwanted horizontal scrolling */
+  line-height: 1.6;
+  width: 100%;
+}
+
+/* ==========================================
+   2. SECTION & LAYOUT UTILITIES
+   ========================================== */
+.u-clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.u-section-1 {
+  position: relative;
+  width: 100%;
+  display: block; /* Fixed: Changed from flex to block layout to fix scrolling issues */
+  text-align: center;
+}
+
+.u-section-2 {
+  background-color: #f4e6d6; 
+  padding: 30px 0;
+  width: 100%;
+}
+
+.u-sheet {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1140px;
+  padding: 0 20px;
+}
+
+.u-valign-middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================
+   3. IMAGE HANDLING & SPECIFIC CLASSES
+   ========================================== */
+.u-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  margin: 5px auto;
+}
+
+/* Top and bottom flower decorations */
+.u-image-16 {
+  width: 100%;
+  max-height: 98px;
+  object-fit: cover;
+  margin: 0 0 40px 0;
+}
+
+.u-section-1 > .u-image-16:of-type(2) {
+  margin: 40px 0;
+}
+
+/* Header Text Images */
+.u-image-8 { max-width: 600px; width: 85%; }
+.u-image-6 { max-width: 450px; width: 75%; margin: 25px auto; }
+.u-image-5 { max-width: 500px; width: 80%; }
+
+/* Watch Promo Button */
+.u-image-9 {
+  max-width: 250px;
+  width: 60%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.u-image-9:hover { transform: scale(1.05); }
+
+/* Footer Image */
+.u-image-1 {
+  max-width: 350px;
+  width: 90%;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+.u-image-1:hover { opacity: 0.8; }
+
+/* ==========================================
+   4. IMAGE GALLERY GRID (Dynamic Content)
+   ========================================== */
+#imageGallery {
+  display: grid;
+  /* Desktop default: 3 images per line */
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 25px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Gallery image rendering */
+.image-container > img {
+  width: 100%;
+  height: 300px; /* Fixed height for clean desktop grid alignment */
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+  display: block;
+  cursor: pointer;
+}
+
+/* ==========================================
+   5. ANIMATIONS
+   ========================================== */
+[data-animation-name="fade"] { animation: fadeIn 1.2s ease forwards; }
+[data-animation-name="customAnimationIn"] { animation: slideDownFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.infinite[data-animation-name="pulse"] { animation: pulseLoop 2.5s infinite ease-in-out; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulseLoop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+/* ==========================================
+   6. RESPONSIVE DESIGN (Media Queries)
+   ========================================== */
+@media (max-width: 1024px) {
+  #imageGallery {
+    grid-template-columns: repeat(2, 1fr); /* 2 images per row for tablets */
+    gap: 20px;
+  }
+  .image-container > img {
+    height: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .u-image-16 {
+    max-height: 60px;
+  }
+  
+  /* Forces exactly 2 images per line on mobile devices */
+  #imageGallery {
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 12px;
+    padding: 0 15px;
+  }
+  
+  .image-container > img {
+    height: 160px; /* Shorter image height optimized for mobile screens */
+  }
+
+  /* Resize custom download icons so they don't block mobile image views */
+  .download-button img {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .back-button {
+    width: 45px;
+    height: 45px;
+    top: 15px;
+    right: 15px;
+  }
+  .back-arrow {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  
+  background-image: url('../img/Background.png'); 
+  
+  background-repeat: no-repeat;     
+  background-position: center center; 
+  background-size: cover;            
+  background-attachment: fixed;      
+  background-color: #fff9f3;         
+  
+  color: #333;
+  overflow-x: hidden;                
+  line-height: 1.6;
+  width: 100%;
+}
+
+
+/* ==========================================
+   7. CUSTOM PRINOPIX FOOTER STYLES
+   ========================================== */
+.prinopix-footer-section {
+  background-color: #f4e6d6; /* Warm tone matching your color scheme */
+  padding: 10px 0;
+  width: 100%;
+  margin-top: 50px; /* Separates the gallery from the footer */
+}
+
+.footer-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prinopix-footer-link {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555555;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.3s ease, transform 0.2s ease;
+  letter-spacing: 0.5px;
+}
+
+/* Interactivity states */
+.prinopix-footer-link:hover {
+  color: #111111;
+  transform: translateY(-2px);
+}
+
+/* Beating Heart Icon Animation */
+.heart-icon {
+  display: inline-block;
+  color: #e24e42;
+  animation: heartBeat 1.5s infinite ease-in-out;
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.2); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.2); }
+  70% { transform: scale(1); }
+}
+
+/* Mobile responsive font sizing */
+@media (max-width: 768px) {
+  .prinopix-footer-section {
+    padding: 20px 0;
+    margin-top: 30px;
+  }
+  
+  .prinopix-footer-link {
+    font-size: 1rem;
+  }
+}

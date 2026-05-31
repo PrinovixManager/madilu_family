@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+</head>
+<body>
+<script>
+
+const tf = faceapi.tf;
+
+// ✅ FAST MODE
+tf.env().set("WEBGL_PACK", true);
+
+const MODEL_URL = "https://justadudewhohacks.github.io/face-api.js/models";
+
+let loaded = false;
+
+async function loadModels() {
+  if (loaded) return;
+
+  await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
+  await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+  await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+
+  loaded = true;
+  window.parent.postMessage("FAST_READY", "*");
+}
+
+function l2norm(arr) {
+  let s = 0;
+  for (let i = 0; i < arr.length; i++) s += arr[i]*arr[i];
+  s = Math.sqrt(s) || 1e-8;
+  return arr.map(v => v / s);
+}
+
+function loadImage(base64) {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => res(img);
+    img.onerror = rej;
+    img.src = base64;
+  });
+}
+
+window.addEventListener("message", async (e) => {
+
+  const { id, imageData } = e.data;
+
+  let result;
+
+  try {
+    await loadModels();
+
+    const img = await loadImage(imageData);
+
+    tf.engine().startScope();
+
+    const det = await faceapi
+      .detectSingleFace(img, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.01 }))
+      .withFaceLandmarks()
+      .withFaceDescriptor();
+
+    tf.engine().endScope();
+    logTFMemory("after");
+
+    if (!det) {
+      result = { error: "No face detected" };
+    } else {
+      result = {
+        descriptor: l2norm(Array.from(det.descriptor)),
+        confidence: det.detection.score
+      };
+    }
+
+    img.src = "";
+
+  } catch (err) {
+    result = { error: err.message };
+  }
+
+  // ✅ CLEAN MEMORY
+  tf.disposeVariables();
+
+  parent.postMessage({ id, payload: result }, "*");
+});
+
+
+
+function logTFMemory(stage = "") {
+  const mem = tf.memory();
+
+  parent.postMessage({
+    type: "TF_MEMORY",
+    stage,
+    memory: {
+      numTensors: mem.numTensors,
+      numDataBuffers: mem.numDataBuffers,
+      numBytes: mem.numBytes
+    }
+  }, "*");
+}
+
+loadModels(); 
+</script>
+</body>
+</html>
