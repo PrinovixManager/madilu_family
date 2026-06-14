@@ -363,7 +363,7 @@ function downloadFromDrive(id) {
     return;
   }
   //const link = `https://drive.usercontent.google.com/u/0/uc?id=${id}&export=download`;
-  const link = `/download/${id}`;
+  const link = `https://prinopix.com/download/${id}`;
   window.open(link, "_blank");
 }
 
