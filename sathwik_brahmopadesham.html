@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Face Match</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/Murali_And_Ramya_Engagement.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.ico">
+    <link rel="apple-touch-icon" href="img/favicon.ico">
+
+  <meta property="og:title" content="Chi. Sathwik | Brahmopadesham Photos">
+  <meta property="og:description" content="✨ Relive the sacred moments of Chi. Sathwik's Brahmopadesham. View the event photos here.">
+  <meta property="og:image" content="https://cdn.prinopix.com/production/photo_hosting/sathwik_brahmopadesham/preview_image/sathwik_brahmopadesham.png">
+  <meta property="og:url" content="https://madilu.family/satwik_brahmopadesham">
+  <meta property="og:type" content="website">
+</head>
+
+<body>
+
+<header class="event-header">
+
+  <div class="event-title-wrapper">
+    <div class="event-title" id="eventTitle">
+      Loading Event...
+    </div>
+  </div>
+
+  <div class="header-actions">
+
+    <button id="layoutToggleBtn" class="header-btn">
+      Rearrange
+    </button>
+    
+    <button id="shareBtn" class="header-btn">
+      Share
+    </button>
+
+    <button id="showAllBtn" class="header-btn">
+      View All
+    </button>
+    
+  </div>
+
+</header>
+
+
+<!-- ✅ NEW LOADER POSITION -->
+<div id="loader" class="loader-overlay">
+  <div class="loader-box">
+    <div class="spinner"></div>
+    <span id="loaderText">Loading Event Photos</span>
+
+    <!-- ✅ NEW rotating messages -->
+    <div class="loader-messages">
+      <div>🖼️ Fetching event photos</div>
+      <div>⚡ Preparing your gallery</div>
+      <div>🔄 Organizing gallery layout</div>
+      <div>⏳ This may take a few seconds</div>
+    </div>
+
+  </div>
+</div>
+
+<div id="results" class="gallery"></div>
+
+
+<div id="results" class="gallery"></div>
+
+<button id="floatingUploadBtn" class="floating-btn">
+  📸 Match Photo
+</button>
+
+<input type="file" id="galleryInput" accept="image/*"hidden>
+
+<!-- Image Modal -->
+<div id="imageModal" class="image-modal">
+  <span class="close-modal" id="closeModal">&times;</span>
+  <img id="modalImage">
+</div>
+
+<!-- Popup -->
+<div id="popupOverlay" class="popup-overlay">
+  <div class="popup-box">
+    <div id="popupMessage"></div>
+  </div>
+</div>
+<!-- Upload Choice Modal -->
+<div id="uploadOverlay" class="popup-overlay" style="display:none;">
+  <div class="popup-box">
+    <h4>
+      Instructions
+    </h4>
+    <ul>
+      <li>💡 Ensure good lighting and a centered face.</li>
+      <li>📸 Upload a clear, high-quality photo.</li>
+      <li>⚠️ Low-quality photos may fail detection.</li>
+      <li>🧑 Avoid photos with multiple people.</li>
+      <li>⏳ First load may take a few seconds.</li>
+    </ul>
+
+    <div class="threshold-container">
+      <div class="threshold-label">
+        🎯 Match Accuracy: <span id="thresholdPercent">80%</span>
+      </div>
+
+      <div class="threshold-desc">
+        Choose how accurate you want your matches<br>Higher = More accurate<br>Lower = More photos
+      </div>
+
+      <input 
+        type="range" 
+        id="thresholdSlider" 
+        min="30" 
+        max="90" 
+        step="1"
+      >
+    </div>
+
+    <button id="uploadPhotoBtn" class="option-btn">
+      🖼️ Upload From Gallery
+    </button>
+
+    <button onclick="closeUploadPopup()" style="margin-top:15px;">
+      Cancel
+    </button>
+  </div>
+</div>
+
+
+<!-- Debug Panel -->
+<div id="debugPanel" class="debug-panel">
+
+  <div class="debug-header">
+    <span>Debug Console</span>
+    <button id="debugToggleBtn">−</button>
+  </div>
+
+  <div id="debugContent" class="debug-content"></div>
+
+</div>
+
+<!-- Hidden processing iframes -->
+<iframe id="fastFrame" src="/webgl-fast.html" style="display:none;"></iframe>
+<iframe id="accurateFrame" src="/webgl-accurate.html" style="display:none;"></iframe>
+
+<script type="module" src="js/sathwik_brahmopadesham.js"></script>
+
+</body>
+</html>
