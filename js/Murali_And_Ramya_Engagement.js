@@ -72,9 +72,9 @@ document.getElementById("eventTitle").innerText =
 // ==========================================
 //const domain = window.location.hostname;
 
-const MASTER_BIN_URL = `https://cdn.prinopix.com/production/photo_hosting/${eventName}/master_bin/master.bin`;
+const MASTER_BIN_URL = `https://cdn.prinopix.com/production/photo_hosting/${eventName.toLowercase()}/master_bin/master.bin`;
 
-const MASTER_JSON_URL = `https://cdn.prinopix.com/production/photo_hostin/${eventName}/master_json/master.json`;
+const MASTER_JSON_URL = `https://cdn.prinopix.com/production/photo_hostin/${eventName.toLowercase()}/master_json/master.json`;
 
 
 // ==========================================
