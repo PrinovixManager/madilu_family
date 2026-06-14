@@ -48,7 +48,7 @@ const thresholdPercentText = document.getElementById("thresholdPercent");
 // EVENT PARAM
 // ==========================================
 const params = new URLSearchParams(window.location.search);
-const eventName = "satwik_brahmopadesham"
+const eventName = "sathwik_brahmopadesham"
 
 if (!eventName) {
   showScreenMessage("Event not specified");
