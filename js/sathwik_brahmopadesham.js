@@ -973,7 +973,7 @@ function stopDrag() {
 // SHARE BUTTON
 // ==========================================
 shareBtn.addEventListener("click", () => {
-  const shareURL = `https://madilu.family/satwik_brahmopadesham`;
+  const shareURL = `https://madilu.family/sathwik_brahmopadesham`;
 
   // Native share (mobile)
   if (navigator.share) {
