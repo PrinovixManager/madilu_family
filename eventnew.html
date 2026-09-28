@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Event Face Match</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/eventnew.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.ico">
+  <link rel="apple-touch-icon" href="img/favicon.ico">
+</head>
+
+<body>
+
+  <header class="event-header">
+    <div class="header-container">
+      <div class="title-decoration-wrapper">
+        <div class="deco-line line-left">
+          <svg class="deco-sparkle" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2" />
+          </svg>
+          <span class="deco-bar"></span>
+        </div>
+
+        <div class="header-brand-section">
+          <div class="event-title" id="eventTitle">
+            Loading Event...
+          </div>
+        </div>
+
+        <div class="deco-line line-right">
+          <span class="deco-bar"></span>
+          <svg class="deco-sparkle" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="info-btn-wrapper">
+        <button id="photographerInfoBtn" class="info-btn-circle" title="Credits / Photographer Info"
+          style="display: none;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </button>
+
+        <div id="infoHintToast" class="info-hint-toast hidden" style="display: none;">
+          <div class="info-hint-arrow"></div>
+          <span id="infoHintText">📸 Tap for Photographer Info</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ✅ NEW LOADER POSITION -->
+  <div id="loader" class="loader-overlay">
+    <div class="loader-box">
+      <div class="spinner"></div>
+      <span id="loaderText">Loading Event Photos</span>
+
+      <!-- ✅ NEW rotating messages -->
+      <div class="loader-messages">
+        <div>🖼️ Fetching event photos</div>
+        <div>⚡ Preparing your gallery</div>
+        <div>🔄 Organizing gallery layout</div>
+        <div>⏳ This may take a few seconds</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="results" class="gallery"></div>
+
+  <!-- 🌟 FLOATING CONTROL DOCK WITH 3-SECOND ACTION HINT TOAST -->
+  <div class="floating-dock-container">
+
+    <div id="dockHintToast" class="dock-hint-toast">
+      <span id="dockHintText">✨ Tap <strong>Find Photo</strong> to match your face!</span>
+    </div>
+
+    <div class="floating-dock">
+      <button id="floatingUploadBtn" class="floating-btn dock-btn primary-dock-btn">
+        <svg class="btn-svg-lg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        <span class="btn-text main-label">Find Photo</span>
+      </button>
+
+      <div class="dock-divider"></div>
+
+      <button id="layoutToggleBtn" class="header-btn dock-btn">
+        <svg class="btn-svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span class="btn-text">Grid</span>
+      </button>
+
+      <button id="shareBtn" class="header-btn dock-btn">
+        <svg class="btn-svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+        <span class="btn-text">Share</span>
+      </button>
+
+      <button id="showAllBtn" class="header-btn dock-btn">
+        <svg class="btn-svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+        <span class="btn-text">View All</span>
+      </button>
+    </div>
+
+  </div>
+
+  <input type="file" id="galleryInput" accept="image/*" hidden>
+
+  <!-- Image Modal -->
+  <div id="imageModal" class="image-modal">
+    <button class="close-modal" id="closeModal" aria-label="Close modal">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <button class="modal-download-btn" id="modalDownloadBtn" aria-label="Download photo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      <span>Download</span>
+    </button>
+    <div class="swipe-hint" id="swipeHint">
+      <span class="swipe-icon">👈</span> Swipe to navigate <span class="swipe-icon">👉</span>
+    </div>
+    <button class="modal-nav-btn prev-btn" id="modalPrevBtn" aria-label="Previous photo">&#10094;</button>
+    <img id="modalImage">
+    <button class="modal-nav-btn next-btn" id="modalNextBtn" aria-label="Next photo">&#10095;</button>
+    <div class="modal-counter" id="modalCounter"></div>
+  </div>
+
+  <!-- Photographer Info Modal -->
+  <div id="photographerModal" class="popup-overlay" style="display:none;">
+    <div class="popup-box photographer-modal-box">
+      <button class="close-modal-btn" id="closePhotographerModalBtn" aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="photographer-header">
+        <div id="photographerLogoCircle" class="photographer-logo-circle">
+          <!-- Image or initials populated dynamically -->
+        </div>
+        <h3 id="photographerModalName" class="photographer-title"></h3>
+        <p id="photographerModalPhone" class="photographer-subtitle"></p>
+      </div>
+
+      <div id="photographerActionGrid" class="photographer-actions-grid">
+        <!-- Clickable action buttons for Call, Email, Instagram, Facebook, Website -->
+      </div>
+
+      <div class="photographer-branding">
+        <span>Powered by</span>
+        <a href="https://prinopix.com" target="_blank" class="branding-link">
+          <img src="img/Logo.png" alt="Prinopix" class="branding-logo">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div id="popupOverlay" class="popup-overlay">
+    <div class="popup-box">
+      <div id="popupMessage"></div>
+    </div>
+  </div>
+  <!-- Upload Choice Modal -->
+  <div id="uploadOverlay" class="popup-overlay" style="display:none;">
+    <div class="popup-box">
+      <h4>
+        Instructions
+      </h4>
+      <ul>
+        <li>💡 Ensure good lighting and a centered face.</li>
+        <li>📸 Upload a clear, high-quality photo.</li>
+        <li>⚠️ Low-quality photos may fail detection.</li>
+        <li>🧑 Avoid photos with multiple people.</li>
+        <li>⏳ First load may take a few seconds.</li>
+      </ul>
+
+      <div class="threshold-container">
+        <div class="threshold-label">
+          🎯 Match Accuracy: <span id="thresholdPercent">80%</span>
+        </div>
+
+        <div class="threshold-desc">
+          Choose how accurate you want your matches<br>Higher = More accurate<br>Lower = More photos
+        </div>
+
+        <input type="range" id="thresholdSlider" min="30" max="90" step="1">
+      </div>
+
+      <button id="uploadPhotoBtn" class="option-btn">
+        🖼️ Upload From Gallery
+      </button>
+
+      <button onclick="closeUploadPopup()" style="margin-top:15px;">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Debug Panel -->
+  <div id="debugPanel" class="debug-panel">
+
+    <div class="debug-header">
+      <span>Debug Console</span>
+      <button id="debugToggleBtn">−</button>
+    </div>
+
+    <div id="debugContent" class="debug-content"></div>
+
+  </div>
+
+  <!-- Hidden processing iframes -->
+  <iframe id="fastFrame" src="/webgl-fast.html" style="display:none;"></iframe>
+  <iframe id="accurateFrame" src="/webgl-accurate.html" style="display:none;"></iframe>
+
+  <script type="module" src="script/eventnew.js"></script>
+
+</body>
+
+</html>
