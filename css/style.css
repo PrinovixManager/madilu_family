@@ -60,6 +60,7 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -2614,6 +2615,21 @@ body.wedding-cover-active .person-stage.fade-up-done {
 }
 
 @media (max-width: 768px) {
+  /* Hardware Accelerated GPU Rendering & Silky-Smooth Mobile Scrolling */
+  .fade-up-item,
+  .person-stage,
+  .detail-card,
+  .celebration-card,
+  .wedding-cover,
+  .gate-left,
+  .gate-right,
+  .temple-bg-image,
+  .royal-view-photo-btn {
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
   .page-wrapper {
     padding: 20px 12px 70px 12px;
   }

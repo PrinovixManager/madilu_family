@@ -38,11 +38,13 @@
     if (spotlight && window.innerWidth > 768) {
       spotX += (pointerX - spotX) * 0.12;
       spotY += (pointerY - spotY) * 0.12;
-      spotlight.style.transform = `translate3d(${spotX}px, ${spotY}px, 0)`;
+      spotlight.style.transform = `translate3d(${spotX.toFixed(1)}px, ${spotY.toFixed(1)}px, 0)`;
+      requestAnimationFrame(updateSpotlight);
     }
+  }
+  if (window.innerWidth > 768) {
     requestAnimationFrame(updateSpotlight);
   }
-  requestAnimationFrame(updateSpotlight);
 
   // =========================================================================
   // 3. FALLING FLOWER PETALS & GOLDEN STARDUST (MOBILE TOUCH & DESKTOP 60FPS)
@@ -62,8 +64,8 @@
 
     const PETAL_TYPES = ['jasmine', 'marigold', 'rose', 'akshata'];
     const petals = [];
-    // Reduced petal count to ensure text and details are crystal-clear to read
-    const MAX_PETALS = window.innerWidth < 768 ? 8 : 14;
+    // Lightweight ambient petals on mobile so text is never obstructed and scrolling is silky-smooth
+    const MAX_PETALS = window.innerWidth < 768 ? 4 : 14;
 
     class Petal {
       constructor(x, y, isBurst = false) {
@@ -76,18 +78,18 @@
         this.y = y !== undefined ? y : -25 - Math.random() * 40;
 
         if (this.type === 'jasmine') {
-          this.size = Math.random() * 7 + 7;
+          this.size = Math.random() * 6 + 6;
           this.color = '#FFFFFF';
           this.centerColor = '#FFD000';
         } else if (this.type === 'marigold') {
-          this.size = Math.random() * 9 + 8;
+          this.size = Math.random() * 8 + 7;
           this.color = Math.random() > 0.4 ? '#FFB703' : '#FB8500';
         } else if (this.type === 'rose') {
-          this.size = Math.random() * 10 + 8;
+          this.size = Math.random() * 9 + 7;
           this.color = Math.random() > 0.5 ? '#E63946' : '#C1121F';
         } else {
           // Shimmering Golden Akshata Particle
-          this.size = Math.random() * 3.5 + 2;
+          this.size = Math.random() * 3 + 2;
           this.color = '#FFE885';
         }
 
@@ -97,17 +99,17 @@
           this.vx = Math.cos(angle) * speed;
           this.vy = Math.sin(angle) * speed - 2.5;
         } else {
-          this.vx = (Math.random() - 0.5) * 0.9;
-          this.vy = this.type === 'akshata' ? Math.random() * 1.3 + 0.9 : Math.random() * 1.0 + 0.7;
+          this.vx = (Math.random() - 0.5) * 0.8;
+          this.vy = this.type === 'akshata' ? Math.random() * 1.2 + 0.8 : Math.random() * 0.9 + 0.6;
         }
 
         this.rotation = Math.random() * 360;
-        this.rotationSpeed = (Math.random() - 0.5) * 1.8;
+        this.rotationSpeed = (Math.random() - 0.5) * 1.6;
         this.oscillation = Math.random() * Math.PI * 2;
         this.oscillationSpeed = Math.random() * 0.02 + 0.008;
-        this.oscillationAmp = Math.random() * 1.2 + 0.5;
-        // Soft translucent opacity so text is never obstructed
-        this.opacity = Math.random() * 0.25 + 0.35;
+        this.oscillationAmp = Math.random() * 1.1 + 0.4;
+        // Soft translucent opacity so text is clear to read
+        this.opacity = Math.random() * 0.22 + 0.3;
         this.scaleY = Math.random() * 0.5 + 0.5;
       }
 
@@ -118,15 +120,17 @@
         this.rotation += this.rotationSpeed;
         this.scaleY = Math.sin(this.oscillation * 2) * 0.4 + 0.6;
 
-        // Interactive wind repulsion from pointer / touch point
-        const dx = this.x - pointerX;
-        const dy = this.y - pointerY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const repelRadius = window.innerWidth < 768 ? 120 : 100;
-        if (dist < repelRadius) {
-          const force = (repelRadius - dist) / repelRadius;
-          this.x += (dx / dist) * force * 4.0;
-          this.y += (dy / dist) * force * 4.0;
+        // Interactive wind repulsion from pointer (desktop)
+        if (window.innerWidth > 768) {
+          const dx = this.x - pointerX;
+          const dy = this.y - pointerY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const repelRadius = 100;
+          if (dist < repelRadius) {
+            const force = (repelRadius - dist) / repelRadius;
+            this.x += (dx / dist) * force * 4.0;
+            this.y += (dy / dist) * force * 4.0;
+          }
         }
 
         if (this.y > height + 35) {
@@ -175,7 +179,7 @@
         } else {
           c.fillStyle = this.color;
           c.shadowColor = '#FFD700';
-          c.shadowBlur = 6;
+          c.shadowBlur = 4;
           c.beginPath();
           c.ellipse(0, 0, this.size * 0.6, this.size * 1.2, Math.PI / 4, 0, Math.PI * 2);
           c.fill();
@@ -200,8 +204,9 @@
     }
     requestAnimationFrame(animatePetals);
 
-    // Global burst function
+    // Global burst function (disabled on mobile so taps never obstruct content)
     burstFlowersGlobal = function (x, y, count = 16) {
+      if (window.innerWidth <= 768) return;
       for (let i = 0; i < count; i++) {
         petals.push(new Petal(x, y, true));
         if (petals.length > MAX_PETALS + 35) {
@@ -215,18 +220,16 @@
 
     // Desktop Click Burst
     window.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768) return;
       if (e.target.closest('button, a, input, textarea, .celebration-card')) return;
-      burstFlowersGlobal(e.clientX, e.clientY, 14);
+      if (burstFlowersGlobal) burstFlowersGlobal(e.clientX, e.clientY, 14);
     });
 
-    // Mobile Touch Dragging Wind Waves & Touch Tap Burst
+    // Mobile Touch Dragging Wind Waves
     window.addEventListener('touchstart', (e) => {
       if (e.touches && e.touches[0]) {
         pointerX = e.touches[0].clientX;
         pointerY = e.touches[0].clientY;
-        if (!e.target.closest('button, a, input, textarea, .celebration-card')) {
-          burstFlowersGlobal(pointerX, pointerY, 10);
-        }
       }
     }, { passive: true });
 
@@ -239,15 +242,15 @@
   }
 
   // =========================================================================
-  // 4. INTERACTIVE COUPLE STAGE BLESSING BURSTS
+  // 4. INTERACTIVE COUPLE STAGE BLESSING BURSTS (DESKTOP ONLY)
   // =========================================================================
-  // Interactive Cutout Blessing Aura & Tap Reaction
   const groomStage = document.getElementById('groom-interactive-stage');
   const brideStage = document.getElementById('bride-interactive-stage');
 
   function attachCoupleReaction(stage) {
     if (!stage) return;
     stage.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768) return;
       const rect = stage.getBoundingClientRect();
       const x = rect.left + rect.width / 2;
       const y = rect.top + rect.height * 0.4;
@@ -336,13 +339,19 @@
   // =========================================================================
   // 6. TEMPLE MANDAP BACKGROUND SEAMLESS SCROLL PARALLAX (ZERO STRIPES / GAPS)
   // =========================================================================
+  let scrollTicking = false;
   window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
-    const templeImg = document.querySelector('.temple-bg-image');
-    if (templeImg) {
-      // Clamped subtle pan so image boundaries never become exposed
-      const yOffset = Math.min(scrolled * 0.04, 35);
-      templeImg.style.transform = `scale(1.02) translate3d(0, ${-yOffset}px, 0)`;
+    if (!scrollTicking) {
+      requestAnimationFrame(() => {
+        const scrolled = window.scrollY;
+        const templeImg = document.querySelector('.temple-bg-image');
+        if (templeImg) {
+          const yOffset = Math.min(scrolled * 0.04, 35);
+          templeImg.style.transform = `scale(1.02) translate3d(0, ${-yOffset.toFixed(1)}px, 0)`;
+        }
+        scrollTicking = false;
+      });
+      scrollTicking = true;
     }
   }, { passive: true });
 
